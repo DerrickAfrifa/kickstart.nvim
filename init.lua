@@ -241,6 +241,38 @@ vim.o.hlsearch = false
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+-- Code folding
+vim.opt.foldmethod = "expr";
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+local vim = vim
+local api = vim.api
+local M = {}
+-- function to create a list of commands and convert them to autocommands
+-------- This function is taken from https://github.com/norcalli/nvim_utils
+function M.nvim_create_augroups(definitions)
+    for group_name, definition in pairs(definitions) do
+        api.nvim_command('augroup '..group_name)
+        api.nvim_command('autocmd!')
+        for _, def in ipairs(definition) do
+            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
+            api.nvim_command(command)
+        end
+        api.nvim_command('augroup END')
+    end
+end
+
+
+local autoCommands = {
+    -- other autocommands
+    open_folds = {
+        {"BufReadPost,FileReadPost", "*", "normal zR"}
+    }
+}
+
+-- defaults folds to be open on file open
+M.nvim_create_augroups(autoCommands)
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -308,6 +340,7 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'harpoon')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -327,7 +360,13 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>tr', ':Neotree right<CR>', { desc = '[T]ree [R]ight' })
+vim.keymap.set('n', '<leader>tr', ':Neotree right toggle reveal<CR>', { desc = '[T]ree [R]ight' })
+vim.keymap.set('n', '<leader>ftr', ':Neotree focus right<CR>', { desc = '[F]ocus [T]ree [R]ight' })
+vim.keymap.set('n', 'ha', require('harpoon.mark').add_file, { desc = '[h]arpoon [a]dd' })
+vim.keymap.set('n', 'hn', require('harpoon.ui').nav_next, { desc = '[h]arpoon [n]ext' })
+vim.keymap.set('n', 'hp', require('harpoon.ui').nav_prev, { desc = '[h]arpoon [p]revious' })
+vim.keymap.set('n', 'hm', require("harpoon.ui").toggle_quick_menu, { desc = '[h]arpoon [m]arks' })
+-- vim.keymap.set('n', 'hm', ':Telescope harpoon marks<CR>', { desc = '[h]arpoon [m]arks' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
