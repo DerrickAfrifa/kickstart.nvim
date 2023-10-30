@@ -2,7 +2,7 @@
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 return {
-  "neoscroll.nvim",
+  "karb94/neoscroll.nvim",
   config = function ()
     require('neoscroll').setup {}
   end,
