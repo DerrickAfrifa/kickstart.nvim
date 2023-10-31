@@ -375,6 +375,7 @@ vim.keymap.set('n', 'hn', require('harpoon.ui').nav_next, { desc = '[h]arpoon [n
 vim.keymap.set('n', 'hp', require('harpoon.ui').nav_prev, { desc = '[h]arpoon [p]revious' })
 vim.keymap.set('n', 'hm', require("harpoon.ui").toggle_quick_menu, { desc = '[h]arpoon [m]arks' })
 -- vim.keymap.set('n', 'hm', ':Telescope harpoon marks<CR>', { desc = '[h]arpoon [m]arks' })
+vim.keymap.set('n', '<leader>qq', ':q<CR>', { desc = '[q]uit' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
