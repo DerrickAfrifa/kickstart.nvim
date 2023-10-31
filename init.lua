@@ -125,10 +125,17 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
+
+        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+        vim.keymap.set('n', '<leader>hs', gs.stage_hunk)
+        vim.keymap.set('n', '<leader>hr', gs.reset_hunk)
+        vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk)
+        vim.keymap.set('n', '<leader>hp', gs.preview_hunk)
+        vim.keymap.set('n', '<leader>td', gs.toggle_deleted)
+        vim.keymap.set('n', '<leader>tb', gs.toggle_current_line_blame)
+
         vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then
             return ']c'
